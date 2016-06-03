@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	#uncomment next line if silex app root is in a mamp subdirectory
+	RewriteBase /kineo
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ web/index.php [L]
+</IfModule>
+
+#<IfModule mod_rewrite.c>
+#    Options -MultiViews
+
+#    RewriteEngine On
+#    #RewriteBase /path/to/app
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteRule ^ index.php [QSA,L]
+#</IfModule>
