@@ -70,18 +70,18 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 
 	$form = $app['form.factory']->createBuilder('form', $default)
 		->add('vote', 'choice', [
-			'attr' => ['placeholder' => 'Are you going to vote?'],
+			'label' => 'Are you going to vote?',
 			'choices' => [
 					1 => 'Yes',
 					0 => 'No'
 				]
 		])
 		->add('party', 'choice', [
-			'attr' => ['placeholder' => 'Who are you going to vote for?'],
+			'label' => 'Who are you going to vote for?',
 			'choices' => $parties
 		])
 		->add('constituency', 'choice', [
-			'attr' => ['placeholder' => 'Which constituency are you in?'],
+			'label' => 'Which constituency are you in?',
 			'choices' => $constituencies
 		])
 		->add('send', 'submit', array(
@@ -115,6 +115,7 @@ $app->match('/kineo/results', function(Request $request) use ($app) {
 	$sql = 'SELECT parties.name as party, constituencies.name as constituency, count(parties.id) as votes from votes
 		LEFT JOIN constituencies ON constituencies.id = votes.constituency
 		LEFT JOIN parties ON parties.id = votes.party
+		WHERE votes.vote = 1
 		GROUP BY party;
 		';
 
