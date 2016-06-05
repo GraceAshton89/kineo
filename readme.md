@@ -1,8 +1,10 @@
 # Installation
 
-Running install.php from the root should set up the tables dynamically which is how I gathered the data in the first place but I have also included the sql file in the root dir which has some test data in the votes table.
+Running install.php from the root should set up the tables dynamically which is how I gathered the data in the first place but I have also included the sql file in the root dir which has some test data in the votes table. I chose to use an [API](http://www.theyworkforyou.com) for grabbing the 650 constituencies. I use another [API](http://opinionbee.uk) for the party list too.
 
 The path for the voting interface is: `/kineo/vote`.
+
+The functions for the path matching `$app->match('/kineo/vote', function(Request $request) use ($app)` are including the root directory in the first parameter due to the MAMP server that I am using and my v-hosts settings, should this not work for any reason ( depending on your server set up ) simply removing the 'kineo' part of the url may be the solution.
 
 ## Functionality
 

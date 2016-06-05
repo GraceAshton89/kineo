@@ -19,7 +19,7 @@ $res = $app['db']->executeQuery($sql);
 $sql = 'CREATE TABLE IF NOT EXISTS `parties` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(180) DEFAULT NULL,
-  `colour` int(11) DEFAULT NULL,
+  `colour` varchar(6) DEFAULT NULL,
   `code` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -27,7 +27,7 @@ $sql = 'CREATE TABLE IF NOT EXISTS `parties` (
 
 $res = $app['db']->executeQuery($sql);
 
-$sql = 'CREATE TABLE `votes` (
+$sql = 'CREATE TABLE IF NOT EXISTS `votes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `vote` int(11) DEFAULT NULL,
   `constituency` int(11) DEFAULT NULL,
@@ -63,7 +63,6 @@ curl_setopt_array(
 
 $output = json_decode(curl_exec($curl), true);
 
-
 foreach( $output as $c ) {
 	$sql = 'INSERT INTO `parties` (`name`, `colour`, `code`) 
 		VALUES (
@@ -74,5 +73,4 @@ foreach( $output as $c ) {
 	$res = $app['db']->executeQuery($sql);
 }
 
-
-header('http://localhost:8000/kineo/vote'); 
+echo 'Tables installed! <a href="/kineo/vote">Click here</a>';

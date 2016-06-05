@@ -101,7 +101,7 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 
 $app->match('/kineo/results', function(Request $request) use ($app) {
 
-	$sql = 'SELECT parties.name as party, constituencies.name as constituency, count(parties.id) as votes from votes
+	$sql = 'SELECT parties.name as party, constituencies.name as constituency, count(parties.id) as votes, parties.colour as colour from votes
 		LEFT JOIN constituencies ON constituencies.id = votes.constituency
 		LEFT JOIN parties ON parties.id = votes.party
 		WHERE votes.vote = 1
@@ -113,7 +113,7 @@ $app->match('/kineo/results', function(Request $request) use ($app) {
 
 	foreach( $result as $key => $value ) {
 		$parties[$value['party']] = $value['party'];
-		$votes[] = ['name' => $value['party'], 'y' => (int)$value['votes'] ];
+		$votes[] = ['name' => $value['party'], 'y' => (int)$value['votes'], 'color' => '#' . $value['colour'] ];
 	}
 
 	$results = ['parties' => $parties, 'votes' => json_encode($votes)];
