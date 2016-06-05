@@ -67,42 +67,41 @@
 
       function voteData(data) {
 
-            var parties = [];
+        var parties = [];
 
-            for ( var key in data.parties ) {
-              var party = data.parties[key];
-              parties.push( party );
+        for ( var key in data.parties ) {
+          var party = data.parties[key];
+          parties.push( party );
 
-            }
-            var votes = data.votes;
+        }
+        var votes = data.votes;
 
-            var result = $.parseJSON( votes );
+        var result = $.parseJSON( votes );
 
-            var chart = new Highcharts.Chart({
-              colors: ["#7cb5ec", "#f7a35c"],
-              chart: {
-                  type: 'column',
-                  renderTo: 'container'
-              },
+        var chart = new Highcharts.Chart({
+          colors: ["#7cb5ec", "#f7a35c"],
+          chart: {
+              type: 'column',
+              renderTo: 'container'
+          },
+          title: {
+            text: 'Voting Statistics'
+          },
+          xAxis: {
+              categories: parties
+          },
+          yAxis: {
               title: {
-                text: 'Voting Statistics'
-              },
-              xAxis: {
-                  categories: parties
-              },
-              yAxis: {
-                  title: {
-                      text: 'Votes'
-                  }
-              },
-              series: 
-                  [{
-                  'name' : 'Parties',
-                  'data' : result
-                  }]
+                  text: 'Votes'
+              }
+          },
+          series: 
+              [{
+              'name' : 'Parties',
+              'data' : result
+              }]
 
-            });
-            
+        });   
       }
       
     </script>
