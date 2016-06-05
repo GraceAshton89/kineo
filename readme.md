@@ -1,10 +1,7 @@
 # Installation
 
-Running install.php from the root should install everything necessary, dynamically but there is an sql file also incase that fails for any reason.
+Running install.php from the root should set up the tables dynamically which is how I gathered the data in the first place but I have also included the sql file in the root dir which has some test data in the votes table.
 
-The path for the voting interface is: `/kineo/vote`
+The path for the voting interface is: `/kineo/vote`.
 
 ## Functionality
-I have spent around 6 hours working on this application but I have run out of time to complete it in the way that I wanted to, in regards to showing the results in the graphs. The graphs currently only show a simple count of the results.
-
-I also wanted to use the Symfony query builder but I was having some trouble in getting it to function so I thought it was best in this case to go with what is working.

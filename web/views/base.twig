@@ -25,12 +25,16 @@
     <![endif]-->
   </head>
   <body>
-    <h1>Hello, voters!</h1>
+    <div class="container">
+      <h1>Hello, voters!</h1>
 
-    {% block content %}
+      {% if posted %}
+        <p class="bg-success">Thank you for submitting!</p>
+      {%  endif %}
+      {% block content %}
 
-    {% endblock %}
-
+      {% endblock %}
+    </div>
     {% block chart %}
       <div id="container" style="width:100%; height:400px;"></div>
     {% endblock %}
@@ -70,11 +74,9 @@
               parties.push( party );
 
             }
-            var votes = data.votes;//JSON.stringify(data.votes);
+            var votes = data.votes;
 
             var result = $.parseJSON( votes );
-            console.log(result);
-
 
             var chart = new Highcharts.Chart({
               colors: ["#7cb5ec", "#f7a35c"],
@@ -104,6 +106,5 @@
       }
       
     </script>
-
   </body>
 </html>
