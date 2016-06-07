@@ -36,6 +36,8 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 	$posted = false;
 
 	$app->register(new FormServiceProvider());
+	$conn = $app['db'];
+	$queryBuilder = $conn->createQueryBuilder();
 
 	$default = [
 		'vote' => '',
@@ -43,14 +45,22 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 		'message' => '',
 	];
 
-	$result = $app['db']->fetchAll('SELECT * FROM parties');
+	$queryBuilder->select('*')
+	  ->from('parties', 'p');
+
+	$result = $conn->fetchAll($queryBuilder);
+
 	$parties = [];
 
 	foreach ($result as $party) {
 		$parties[$party['id']] = $party['name'];
 	}
 
-	$result = $app['db']->fetchAll('SELECT * FROM constituencies');
+	$queryBuilder->select('*')
+	  ->from('constituencies', 'p');
+
+	$result = $conn->fetchAll($queryBuilder);
+
 	$constituencies = [];
 
 	foreach ($result as $constituency) {
@@ -83,9 +93,9 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 	if($form->isValid()) {
 		$data = $form->getData();
 
-		$sql = 'INSERT INTO votes 
-			(`vote`, `constituency`, `party`) 
-			VALUES 
+		$sql = 'INSERT INTO votes
+			(`vote`, `constituency`, `party`)
+			VALUES
 			("' . (int)$data['vote'] . '", "' . (int)$data['constituency'] . '", "' . (int)$data['party'] . '")';
 
 		$res = $app['db']->executeQuery($sql);
@@ -101,15 +111,19 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 
 $app->match('/kineo/results', function(Request $request) use ($app) {
 
-	$sql = 'SELECT parties.name as party, constituencies.name as constituency, count(parties.id) as votes, parties.colour as colour from votes
-		LEFT JOIN constituencies ON constituencies.id = votes.constituency
-		LEFT JOIN parties ON parties.id = votes.party
-		WHERE votes.vote = 1
-		GROUP BY party;
-		';
+	$conn = $app['db'];
+	$queryBuilder = $conn->createQueryBuilder();
 
-	$result = $app['db']->fetchAll($sql);
+	$queryBuilder
+		->select('p.name as party, c.name as constituency, count(p.id) as votes, p.colour as colour')
+		->from('votes', 'v')
+		->leftJoin('v', 'constituencies', 'c', 'c.id = v.constituency')
+		->leftJoin('v', 'parties', 'p', 'p.id = v.party')
+		->where('v.vote = 1')
+		->groupBy('v.party')
+		;
 
+	$result = $conn->fetchAll($queryBuilder);
 
 	foreach( $result as $key => $value ) {
 		$parties[$value['party']] = $value['party'];
