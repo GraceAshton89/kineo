@@ -5,12 +5,7 @@ $app = new Silex\Application();
 
 require_once __DIR__ . '/../db/index.php';
 
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints as Assert;
-
 use Silex\Provider\FormServiceProvider;
 
 $app['debug'] = true;
@@ -157,7 +152,7 @@ $app->match('/kineo/results', function(Request $request) use ($app) {
 	$series = [];
 
 	foreach ( $votes as $name => $data ) {
-		$d = []; $total = 0;
+		$d = [];
 		foreach ( $data as $party => $vote ) $d[] = $vote;
 		$series[] = ['name' => $name, 'data' => $d];
 	}
