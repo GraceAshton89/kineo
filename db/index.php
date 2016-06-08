@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'dbs.options' => array (
