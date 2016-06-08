@@ -112,6 +112,20 @@ $app->match('/kineo/vote', function(Request $request) use ($app) {
 $app->match('/kineo/results', function(Request $request) use ($app) {
 
 	$conn = $app['db'];
+	$queryBuilderParties = $conn->createQueryBuilder();
+
+	$queryBuilderParties
+		->select('p.name, COUNT(v.party) as total')
+		->from('parties', 'p')
+		->leftJoin('p', 'votes', 'v', 'p.id = v.party')
+		->where('v.vote = 1')
+		->groupBy('v.party');
+
+	$party_list = $conn->fetchAll($queryBuilderParties);
+
+	$totals = ['name' => 'Total', 'data' => []];
+	foreach ( $party_list as $party ) $totals['data'][] = (int)$party['total'];
+
 	$queryBuilder = $conn->createQueryBuilder();
 
 	$queryBuilder
@@ -120,19 +134,38 @@ $app->match('/kineo/results', function(Request $request) use ($app) {
 		->leftJoin('v', 'constituencies', 'c', 'c.id = v.constituency')
 		->leftJoin('v', 'parties', 'p', 'p.id = v.party')
 		->where('v.vote = 1')
-		->groupBy('v.party')
+		->groupBy('v.constituency, v.party')
+		->orderBy('v.party')
 		;
 
 	$result = $conn->fetchAll($queryBuilder);
+	$votes = [];
 
 	foreach( $result as $key => $value ) {
-		$parties[$value['party']] = $value['party'];
-		$votes[] = ['name' => $value['party'], 'y' => (int)$value['votes'], 'color' => '#' . $value['colour'] ];
+		if ( !isset( $votes[$value['constituency']] ) ) $votes[$value['constituency']] = [];
+
+		foreach( $party_list as $id => $party ) {
+			$parties[$value['party']] = $value['party'];
+			if( $value['party'] == $party['name'] ) {
+				$votes[$value['constituency']][$party['name']] = (int)$value['votes'];
+			} else {
+				if ( !isset($votes[$value['constituency']][$party['name']]) ) $votes[$value['constituency']][$party['name']] = 0;
+			}
+		}
 	}
 
-	$results = ['parties' => $parties, 'votes' => json_encode($votes)];
+	$series = [];
 
-    return $app->json($results, 201);
+	foreach ( $votes as $name => $data ) {
+		$d = []; $total = 0;
+		foreach ( $data as $party => $vote ) $d[] = $vote;
+		$series[] = ['name' => $name, 'data' => $d];
+	}
+	array_push($series, $totals);
+	// Must json_encode series so keys are not strings
+	$results = ['parties' => $parties, 'votes' => json_encode($series)];
+
+  return $app->json($results, 201);
 
 })->bind('results');
 

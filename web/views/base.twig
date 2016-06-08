@@ -45,7 +45,7 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    
+
     <script>
       <!-- Highcharts -->
 
@@ -79,7 +79,6 @@
         var result = $.parseJSON( votes );
 
         var chart = new Highcharts.Chart({
-          colors: ["#7cb5ec", "#f7a35c"],
           chart: {
               type: 'column',
               renderTo: 'container'
@@ -95,15 +94,10 @@
                   text: 'Votes'
               }
           },
-          series: 
-              [{
-              'name' : 'Parties',
-              'data' : result
-              }]
-
-        });   
+          series: result
+        });
       }
-      
+
     </script>
   </body>
 </html>
